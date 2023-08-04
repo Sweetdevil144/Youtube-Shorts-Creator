@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>YouTube Shorts Creator</title>
+</head>
+<body>
+    <img src="../static/assets/logo.png" alt="COPS">
+    <div class="form-container">
+        <form id="video-form">
+            <h1 for="url">YouTube URL:</h1>
+            <input type="text" id="url" name="url" placeholder="Enter YouTube video URL" required>
+            <button type="submit">Extract Shorts</button>
+        </form>
+
+        <div class="videos-container">
+            <!-- Videos will be appended here by JavaScript -->
+        </div>
+    </div>
+
+    <script src="../static/script.js"></script>
+</body>
+</html>
