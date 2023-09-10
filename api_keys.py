@@ -1,2 +1,4 @@
-YT_API_KEY = 'key'
-OPENAI_API_KEY = 'key'
+YT_API_KEY = 'API-KEY'
+
+# Avi's
+OPENAI_API_KEY = 'API-KEY'

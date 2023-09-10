@@ -50,3 +50,14 @@ img {
     background-color: #b9b8bb;
     color: #100d0d;
 }
+.main-video-container {
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-x: scroll;
+    margin-top: 20px;
+}
+iframe {
+    margin: 20px;
+}
