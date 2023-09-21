@@ -1,24 +1,53 @@
 import openai
+import httpx
+import asyncio
 from api_keys import OPENAI_API_KEY
 
 openai.api_key = OPENAI_API_KEY
 
 
-def extract_shorts(captions):
-    chunks = divide_captions_into_chunks(captions, min_duration=15, target_duration=30,
-                                         max_duration=35)  # Set min, target, and max duration for each chunk
-    ratings = []
+async def analyze_captions(text):
+    conversation = [
+        {
+            "role": "system",
+            "content": "You are an expert in analyzing video transcripts to identify coherent and engaging parts "
+                       "suitable for creating YouTube shorts. Evaluate the provided text chunks based on their "
+                       "clarity, relevance, and ability to stand alone as engaging content without needing external "
+                       "context. Identify the sections that can be turned into stand-alone YouTube shorts while "
+                       "ensuring they are clear, engaging, and not abruptly starting or ending."
+        },
+        {
+            "role": "user",
+            "content": "From the given video transcript, identify the chunks that can best be transformed into "
+                       f"compelling YouTube shorts. Here's the text: {text}"
+        }
+    ]
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            'https://api.openai.com/v1/chat/completions',
+            headers={
+                "Authorization": f"Bearer {OPENAI_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "gpt-4",
+                "messages": conversation,
+                "temperature": 0.1
+            }
+        )
+        data = response.json()
+        print("OpenAI API Response:", data)
+        rating = len(data['choices'][0]['message']['content'])
+        return rating
 
-    for chunk in chunks:
-        text = ' '.join([caption['text'] for caption in chunk])
-        rating = analyze_captions(text)
-        start_time = chunk[0]['start']
-        end_time = chunk[-1]['start'] + chunk[-1]['duration']
-        ratings.append((rating, start_time, end_time))
 
-    # Select the top-rated chunks
-    top_shorts = sorted(ratings, reverse=True)[:3]  # You can change this to 4 if you need four shorts
-    timestamps = [(start_time, end_time) for _, start_time, end_time in top_shorts]
+async def extract_shorts_async(captions):
+    chunks = divide_captions_into_chunks(captions, min_duration=15, target_duration=30, max_duration=35)
+    ratings = await asyncio.gather(*(analyze_captions(' '.join([caption['text'] for caption in chunk])) for chunk in chunks))
+
+    chunks_with_ratings = zip(chunks, ratings)
+    top_shorts = sorted(chunks_with_ratings, key=lambda x: x[1], reverse=True)[:3]
+    timestamps = [(chunk[0]['start'], chunk[-1]['start'] + chunk[-1]['duration']) for chunk, _ in top_shorts]
     print("timestamps: ", timestamps)
     return timestamps
 
@@ -27,12 +56,9 @@ def divide_captions_into_chunks(captions, min_duration, target_duration, max_dur
     chunks = []
     current_chunk = []
     current_time = 0
-    max_tokens = 25000
 
     for caption in captions:
-        caption_tokens = len(caption['text'].split())
         next_time = current_time + caption['duration']
-
         if (next_time >= target_duration and next_time - current_time >= min_duration) or next_time > max_duration:
             chunks.append(current_chunk)
             current_chunk = [caption]
@@ -43,30 +69,8 @@ def divide_captions_into_chunks(captions, min_duration, target_duration, max_dur
 
     if current_chunk and current_time >= min_duration:
         chunks.append(current_chunk)
-
     return chunks
 
 
-def analyze_captions(text):
-    print("Sending Requests")
-    conversation = [
-        {"role": "system",
-         "content": "You are a helpful assistant that analyzes video transcripts to identify the best parts for "
-                    "creating YouTube shorts. You should take in consideration the conversations and find the ideal "
-                    "part part that suits the best to create a short"},
-        {"role": "user",
-         "content": f"I want to create YouTube shorts from a single video. Analyze the following text and tell me if "
-                    f"it would make a good short: {text}"},
-    ]
-    response = openai.ChatCompletion.create(
-        # model="gpt-3.5-turbo-16k",
-        model="gpt-4",
-        messages=conversation
-    )
-    # Extract rating from response. You will need to define logic here to extract a rating from the response message
-    rating = len(response['choices'][0]['message']['content'])
-    print(f"Rating is {rating}")
-    return rating
-
-
-
+def extract_shorts(captions):
+    return asyncio.run(extract_shorts_async(captions))

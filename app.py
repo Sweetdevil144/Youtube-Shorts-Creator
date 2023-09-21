@@ -25,5 +25,6 @@ def process_video():
 
     return jsonify({"success": True, "shorts": formatted_start_end})
 
+
 if __name__ == "__main__":
     app.run(debug=True)
