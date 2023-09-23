@@ -1,4 +1,4 @@
-name: Run Project with Secret
+name: Youtube Shorts Project
 
 on:
   push:
@@ -23,7 +23,8 @@ jobs:
       # Step 2: Install dependencies
       - name: Install dependencies
         run: |
-          cd api
+          pip install --upgrade pip 
+          cd $GITHUB_WORKSPACE/api
           pip install -r requirements.txt
 
       # Step 3: Set up the environment with OPENAI_API_KEY
@@ -35,7 +36,7 @@ jobs:
       # Step 4: Execute the project script
       - name: Run app.py
         run: |
-          cd api
+          cd $GITHUB_WORKSPACE/api  # Ensure we are still in the 'api' directory
           python app.py
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
