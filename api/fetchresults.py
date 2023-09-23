@@ -7,7 +7,7 @@ import os
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 if not OPENAI_API_KEY:
-    raise ValueError("No OPENAI_API_KEY set for fetchresults")
+    raise ValueError("No OPENAI_API_KEY key set")
 
 
 async def analyze_captions(text):
