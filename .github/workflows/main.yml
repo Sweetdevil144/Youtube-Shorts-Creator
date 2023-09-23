@@ -1,0 +1,23 @@
+name: Youtube Shorts Project
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  example_job:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      # Step 2: Execute the project script
+      - name: Change directory and run app.py
+        run: |
+          cd api
+          python app.py  
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
