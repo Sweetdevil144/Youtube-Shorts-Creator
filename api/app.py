@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, jsonify
+import os
+from dotenv import load_dotenv
 import fetchresults
-import youtube  # make sure this is your youtube.py file
+import youtube
+
+load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__)
 

@@ -1,8 +1,11 @@
 import openai
 import httpx
 import asyncio
-from api_keys import OPENAI_API_KEY
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 openai.api_key = OPENAI_API_KEY
 
 
@@ -15,8 +18,6 @@ async def analyze_captions(text):
                        "clarity, relevance, and ability to stand alone as engaging content without needing external "
                        "context. Identify the sections that can be turned into stand-alone YouTube shorts while "
                        "ensuring they are clear, engaging, and not abruptly starting or ending."
-            # For a given chunk, specify the video content in that video only if context is not available.
-            # XwUtZMfl0pk
         },
         {
             "role": "user",
