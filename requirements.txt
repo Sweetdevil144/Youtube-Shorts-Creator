@@ -1,6 +1,3 @@
 Flask
-youtube-dl
-yt_dlp
-moviepy
 openai
 youtube_transcript_api
