@@ -1,4 +1,4 @@
-name: Youtube Shorts Project
+name: Run Project with Secret
 
 on:
   push:
@@ -8,16 +8,34 @@ on:
 jobs:
   example_job:
     runs-on: ubuntu-latest
-    
+
     steps:
       # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
-      
-      # Step 2: Execute the project script
-      - name: Change directory and run app.py
+
+      # Step 1.5: Setup Python
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      # Step 2: Install dependencies
+      - name: Install dependencies
         run: |
           cd api
-          python app.py  
+          pip install -r requirements.txt
+
+      # Step 3: Set up the environment with OPENAI_API_KEY
+      - name: Set up environment
+        run: echo "Setting up environment"
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      # Step 4: Execute the project script
+      - name: Run app.py
+        run: |
+          cd api
+          python app.py
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
