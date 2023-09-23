@@ -2,3 +2,4 @@ Flask
 openai
 youtube_transcript_api
 python-dotenv
+httpx
