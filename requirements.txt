@@ -1,5 +1,5 @@
-Flask
-openai
+flask==3.10.9
+openai==0.27.8
 youtube_transcript_api
 python-dotenv
 httpx
