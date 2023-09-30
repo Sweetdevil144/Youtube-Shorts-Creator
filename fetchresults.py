@@ -1,13 +1,13 @@
 import httpx
 import asyncio
-import process
+import os
 from dotenv import load_dotenv
 import time
 
 load_dotenv()
 
 
-OPENAI_API_KEY = process.env.OPENAI_API_KEY
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 if not OPENAI_API_KEY:
     raise ValueError("No OPENAI_API_KEY key set")
 
