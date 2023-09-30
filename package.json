@@ -4,7 +4,9 @@
   "description": "YouTube Shorts Creator is a web application that extracts specific segments from YouTube videos and creates short video clips, or \"shorts.\" Users can submit a YouTube video URL, and the application will download, process, and display the created shorts.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node api/app.js",
+    "build": "echo 'No build step'",
+    "vercel-build": "echo 'No vercel build step'"
   },
   "keywords": [],
   "author": "",
