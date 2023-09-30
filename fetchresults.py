@@ -2,7 +2,6 @@ import httpx
 import asyncio
 import os
 from dotenv import load_dotenv
-import time
 
 load_dotenv()
 
@@ -44,7 +43,6 @@ async def analyze_captions(text):
                     }
                 )
                 data = response.json()
-                # Validating response from API
                 if 'choices' in data and data['choices']:
                     rating = len(data['choices'][0]['message']['content'])
                     return rating
