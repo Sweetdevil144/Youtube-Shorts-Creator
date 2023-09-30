@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node api/app.js",
-    "build": "echo 'No build step'",
-    "vercel-build": "echo 'No vercel build step'"
+    "dev": "nodemon api/app.js"
   },
   "keywords": [],
   "author": "",
