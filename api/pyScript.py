@@ -1,7 +1,7 @@
 import sys
 import json
-import youtube
-import fetchresults
+import api.youtube as youtube
+import api.fetchresults as fetchresults
 
 def main(video_id):
     captions = youtube.get_video_captions(video_id)
