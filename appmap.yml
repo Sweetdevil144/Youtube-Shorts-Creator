@@ -1,0 +1,5 @@
+name: Youtube-Shorts-Creator
+packages:
+  - path: static
+language: javascript
+appmap_dir: tmp/appmap
