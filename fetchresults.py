@@ -1,10 +1,12 @@
-import openai
 import httpx
 import asyncio
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
+import time
 
 load_dotenv()
+
+
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 if not OPENAI_API_KEY:
     raise ValueError("No OPENAI_API_KEY key set")
@@ -26,23 +28,35 @@ async def analyze_captions(text):
                        f"compelling YouTube shorts. Here's the text: {text}"
         }
     ]
+    backoff_time = 1
     async with httpx.AsyncClient() as client:
-        response = await client.post(
-            'https://api.openai.com/v1/chat/completions',
-            headers={
-                "Authorization": f"Bearer {OPENAI_API_KEY}",
-                "Content-Type": "application/json"
-            },
-            json={
-                "model": "gpt-4",
-                "messages": conversation,
-                "temperature": 0.1
-            }
-        )
-        data = response.json()
-        print("OpenAI API Response:", data)
-        rating = len(data['choices'][0]['message']['content'])
-        return rating
+            try:
+                response = await client.post(
+                    'https://api.openai.com/v1/chat/completions',
+                    headers={
+                        "Authorization": f"Bearer {OPENAI_API_KEY}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": "gpt-4",
+                        "messages": conversation,
+                        "temperature": 0.1
+                    }
+                )
+                data = response.json()
+                # Validating response from API
+                if 'choices' in data and data['choices']:
+                    rating = len(data['choices'][0]['message']['content'])
+                    return rating
+                else:
+                    print("Unexpected API response:", data)
+                    return 0 
+            except httpx.HTTPStatusError as exc:
+                print(f"Error response {exc.response.status_code} while sending request to OpenAI: {exc.response.text}")
+                return 0 
+            except Exception as exc:
+                print(f"An error occurred: {str(exc)}")
+                return 0 
 
 
 async def extract_shorts_async(captions):
