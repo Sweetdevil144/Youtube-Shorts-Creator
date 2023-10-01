@@ -1,56 +1,55 @@
-# YouTube Shorts Creator
+### README: Fantastic YouTube Shorts Extractor 🚀
 
-YouTube Shorts Creator is a web application that extracts specific segments from YouTube videos and creates short video clips, or "shorts." Users can submit a YouTube video URL, and the application will download, process, and display the created shorts.
+🎉Welcome to Fantastic YouTube Shorts Extractor🎉 – Your one-stop solution to automagically identify and carve out the most engaging shorts from your favorite YouTube videos! Be ready to harvest the power of AI to transform boring long videos into crisp, catchy, and share-worthy short segments!
 
-## Features
+#### 🌪 Whirlwind Magic Behind the Curtain 🎩
 
-- Extract specific segments from YouTube videos
-- Display created shorts to users
-- Download videos with captions
-- Customizable start and end timings
+Your beloved video enters our mystical tool, gets stripped down to its bare captions, and voilà – analyzed by the arcane powers of GPT-4. This enchanted process sifts through every word, seeking out those hidden gems – clear, relevant, and punchy text segments that can stand tall and proud on their own as YouTube shorts!🎥✨
 
-## Installation
+#### 🚀 Blast Off: Get It Running Locally 🛠
 
-### Requirements
+**Pre-requisites:**
+- [Node.js](https://nodejs.org/)
+- [Python](https://www.python.org/)
+- [pip](https://pip.pypa.io/)
 
-- Python 3.6 or higher
-- Flask
-- yt-dlp
-- moviepy
-- Other dependent libraries (e.g., youtube, fetch-results)
+**Enchanting the Environment:**
+1. Clone the repository:
+   ```bash
+   git clone [repo_url] && cd [repo_name]
+   ```
+2. Weave the Node.js spells:
+   ```bash
+   npm install
+   ```
+3. Concoct the Python potions:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Secret Whispers (Env Variables):
+   - Create a `.env` file in your project root.
+   ```bash
+   OPENAI_API_KEY=YourOpenAIKeyHere
+   PORT=3000
+   ```
+   > 🚨 Keep your secrets safe. Never share the `.env` file!
 
-### Steps
+**🔥Ignite the Engines:**
+- Node.js:
+  ```bash
+  npm start
+  ```
+- Visit: [http://localhost:3000](http://localhost:3000) and behold the magic!
 
-+ Clone the repository:
+#### 🧙 How the Magic Happens...
 
-```bash
-git clone https://github.com/your-username/yt-shorts-creator.git
-```
-+ Navigate to the project directory:
+1. **Caption Extraction:**
+   - The sorcerer, aka `youtube.py`, conjures the video captions, extracting the text along with the respective mystical timestamps.
 
-```angular2html
-cd yt-shorts-webpage
-```
+2. **Caption Analysis:**
+   - The alchemist in `fetchresults.py` transforms the captions, utilizing the mighty GPT-4 from OpenAI, recognizing the text chunks prime for transmutation into compelling YouTube shorts.
+   
+3. **Segment Identification:**
+   - Upon analysis, clear and tantalizing segments are identified, extracting their timestamps, ready to be forged into dazzling video shorts.
 
-+ Install required packages
-
-
-```angular2html
-pip install -r requirements.txt
-```
-
-+ ### Replace the api_keys.py with your actual api keys.
-
-+ Run the application.
-
-```angular2html
-python3 app.py
-```
-
-
-+ Visit http://localhost:5000 in your web browser to use the application.
-
-
-## License
-
-###### This software is made for utilization under COPS induction programme
+Conjure your shorts with the Fantastic YouTube Shorts Extractor and let the worlds of AI and Video enchant your audience to the realm of endless engagement! 🚀🎥✨
