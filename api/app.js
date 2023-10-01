@@ -2,9 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const { spawn } = require('child_process');
+const { log } = require('console');
+
+require('dotenv').config();
 
 const app = express();
 
+const PORT = process.env.PORT
+const apiKey = process.env.OPENAI_API_KEY
 app.use(bodyParser.json());
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
@@ -28,6 +33,6 @@ app.post('/process_video', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log('Server is running on port 3000');
 });
