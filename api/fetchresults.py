@@ -25,6 +25,8 @@ async def analyze_captions(text):
             "role": "user",
             "content": "From the given video transcript, identify the chunks that can best be transformed into "
                        f"compelling YouTube shorts. Here's the text: {text}"
+                       "Now extract shorts in the following JSON format:"
+                       "{ [ { 'start_time:': float, 'end_time': float, 'title': string }, ... ] }"
         }
     ]
     backoff_time = 1
