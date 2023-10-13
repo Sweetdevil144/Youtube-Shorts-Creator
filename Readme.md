@@ -10,8 +10,6 @@ Your beloved video enters our mystical tool, gets stripped down to its bare capt
 
 **Pre-requisites:**
 - [Node.js](https://nodejs.org/)
-- [Python](https://www.python.org/)
-- [pip](https://pip.pypa.io/)
 
 **Enchanting the Environment:**
 1. Clone the repository:
@@ -22,11 +20,7 @@ Your beloved video enters our mystical tool, gets stripped down to its bare capt
    ```bash
    npm install
    ```
-3. Concoct the Python potions:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Secret Whispers (Env Variables):
+3. Secret Whispers (Env Variables):
    - Create a `.env` file in your project root.
    ```bash
    OPENAI_API_KEY=YourOpenAIKeyHere
@@ -37,7 +31,7 @@ Your beloved video enters our mystical tool, gets stripped down to its bare capt
 **🔥Ignite the Engines:**
 - Node.js:
   ```bash
-  npm start
+  node index.js
   ```
 - Visit: [http://localhost:3000](http://localhost:3000) and behold the magic!
 
