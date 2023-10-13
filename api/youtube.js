@@ -1,24 +1,23 @@
 const axios = require('axios')
-exports.getVideoCaptions = async (videoId) => {
+exports.getVideoCaptions = async (Id) => {
   const API_KEY = process.env.Rapid_API_KEY
-  console.log(`API-KEy is ${API_KEY}`);
+  console.log(`API-Key is ${API_KEY}`);
   const options = {
-    method: "GET",
-    url: "https://subtitles-for-youtube1.p.rapidapi.com/GetTextsubtitles",
-    params: {
-      video_id: videoId,
-    },
+    method: 'POST',
+    url: 'https://youtube-scraper-2023.p.rapidapi.com/video_transcript',
     headers: {
-      "X-RapidAPI-Key": API_KEY,
-      "X-RapidAPI-Host": "subtitles-for-youtube1.p.rapidapi.com",
+      'content-type': 'application/json',
+      'X-RapidAPI-Key': API_KEY,
+      'X-RapidAPI-Host': 'youtube-scraper-2023.p.rapidapi.com'
     },
+    data: {
+      videoId: Id
+    }
   };
-
+  
   try {
-    console.log("Fetching Captions");
     const response = await axios.request(options);
-    console.log("Fetched Captions");
-    return response.data;
+    console.log(response.data.body);
   } catch (error) {
     console.error(error);
   }
