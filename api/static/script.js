@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     const url = document.getElementById("url").value;
-    console.log("URL: ", url);
+
     fetch("/process_video", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -11,13 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("data is -> " + data);
         if (data.success) {
           console.log("Video Id is : " + url);
           console.log("Shorts are : " + data.shorts);
-          embedVideos(data.shorts, url);
+          embedVideos(data.shorts, youtube.extractVideoId(url)); // Assuming a function to extract videoId is available
         } else {
-          console.log("An Error occured");
+          console.log("An Error occurred");
         }
       })
       .catch((error) => {
