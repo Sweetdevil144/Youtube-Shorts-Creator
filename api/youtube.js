@@ -1,7 +1,10 @@
-const axios = require('axios')
+const axios = require('axios');
+
 exports.getVideoCaptions = async (Id) => {
-  const API_KEY = process.env.Rapid_API_KEY
+  console.log(`Video ID provided in youtube.js is ${Id}`);
+  const API_KEY = process.env.Rapid_API_KEY;
   console.log(`API-Key is ${API_KEY}`);
+  
   const options = {
     method: 'POST',
     url: 'https://youtube-scraper-2023.p.rapidapi.com/video_transcript',
@@ -16,9 +19,9 @@ exports.getVideoCaptions = async (Id) => {
   };
   
   try {
-    const response = await axios.request(options);
-    console.log(response.data.body);
+    const response = await axios(options);
+    console.log(response.data);
   } catch (error) {
-    console.error(error);
+    console.error(error.response ? error.response.data : error.message);
   }
 };
