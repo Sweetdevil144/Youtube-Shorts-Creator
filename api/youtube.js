@@ -20,7 +20,8 @@ exports.getVideoCaptions = async (Id) => {
   
   try {
     const response = await axios(options);
-    console.log(response.data);
+    const captions = response.data
+    return captions;
   } catch (error) {
     console.error(error.response ? error.response.data : error.message);
   }
