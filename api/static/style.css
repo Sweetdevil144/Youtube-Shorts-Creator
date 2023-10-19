@@ -1,63 +1,63 @@
 body {
-    background: linear-gradient(#0c1816, rgb(242, 241, 245));
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    font-family: Arial, sans-serif;
+  background: linear-gradient(#0c1816, rgb(242, 241, 245));
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
 }
 
 img {
-    height: 100px;
-    border-radius: 6px;
-    padding: 30px;
+  height: 100px;
+  border-radius: 6px;
+  padding: 30px;
 }
 
 .form-container {
-    background-color: white;
-    padding: 50px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  background-color: white;
+  padding: 50px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .form-container input[type="text"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  margin-bottom: 10px;
 }
 .form-container button {
-    background-color: #020000;
-    border: none;
-    color: #ffffff;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 20px;
-    transition: all 0.3s;
+  background-color: #020000;
+  border: none;
+  color: #ffffff;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all 0.3s;
 }
 .form-container button:hover {
-    background-color: #b9b8bb;
-    color: #100d0d;
+  background-color: #b9b8bb;
+  color: #100d0d;
 }
 .main-video-container {
-    padding: 20px;
-    border-radius: 10px;
-    width: 100%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    overflow-x: scroll;
-    margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-x: scroll;
+  margin-top: 20px;
 }
 iframe {
-    margin: 20px;
+  margin: 20px;
 }

@@ -36,8 +36,8 @@ function embedVideos(shorts, videoId) {
     console.log("Start :" + start + " End: " + end);
     const embedCode = `<iframe allowFullScreen="allowFullScreen" 
                                         src="https://www.youtube.com/embed/${videoId}?ecver=1&amp;iv_load_policy=3&amp;rel=0&amp;showinfo=0&amp;yt:stretch=16:9&amp;autohide=1&amp;color=red&amp;start=${Math.round(
-      start
-    )}&amp;end=${Math.round(end)}&amp" 
+                                          start,
+                                        )}&amp;end=${Math.round(end)}&amp" 
                                         width="260" 
                                         height="140" 
                                         allowtransparency="true" 

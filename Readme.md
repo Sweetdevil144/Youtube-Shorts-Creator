@@ -9,9 +9,11 @@ Your beloved video enters our mystical tool, gets stripped down to its bare capt
 #### 🚀 Blast Off: Get It Running Locally 🛠
 
 **Pre-requisites:**
+
 - [Node.js](https://nodejs.org/)
 
 **Enchanting the Environment:**
+
 1. Clone the repository:
    ```bash
    git clone [repo_url] && cd [repo_name]
@@ -29,6 +31,7 @@ Your beloved video enters our mystical tool, gets stripped down to its bare capt
    > 🚨 Keep your secrets safe. Never share the `.env` file!
 
 **🔥Ignite the Engines:**
+
 - Node.js:
   ```bash
   node index.js
@@ -38,11 +41,11 @@ Your beloved video enters our mystical tool, gets stripped down to its bare capt
 #### 🧙 How the Magic Happens...
 
 1. **Caption Extraction:**
+
    - The sorcerer, aka `youtube.py`, conjures the video captions, extracting the text along with the respective mystical timestamps.
 
 2. **Caption Analysis:**
    - The alchemist in `fetchresults.py` transforms the captions, utilizing the mighty GPT-4 from OpenAI, recognizing the text chunks prime for transmutation into compelling YouTube shorts.
-   
 3. **Segment Identification:**
    - Upon analysis, clear and tantalizing segments are identified, extracting their timestamps, ready to be forged into dazzling video shorts.
 

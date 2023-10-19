@@ -1,5 +1,32 @@
 const axios = require("axios");
 
+exports.extractShorts = async (captions) => {
+  const chunks = divideCaptionsIntoChunks(captions, 15, 30, 35);
+  const ratings = await Promise.all(
+    chunks.map((chunk) => {
+      const textChunk = chunk.map((caption) => caption.text).join(" ");
+      return exports.analyzeCaptions(textChunk);
+    }),
+  );
+
+  const chunksWithRatings = chunks.map((chunk, index) => {
+    return {
+      chunk: chunk,
+      rating: ratings[index],
+    };
+  });
+
+  chunksWithRatings.sort((a, b) => b.rating - a.rating);
+  const topShorts = chunksWithRatings.slice(0, 3);
+  const timestamps = topShorts.map(({ chunk }) => ({
+    start: chunk[0].start,
+    end: chunk[chunk.length - 1].start + chunk[chunk.length - 1].duration,
+  }));
+
+  console.log("timestamps:", timestamps);
+  return timestamps;
+};
+
 exports.analyzeCaptions = async (text) => {
   const conversation = [
     {
@@ -26,7 +53,7 @@ exports.analyzeCaptions = async (text) => {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (response.data.choices && response.data.choices[0]) {
@@ -42,38 +69,11 @@ exports.analyzeCaptions = async (text) => {
   }
 };
 
-exports.extractShorts = async (captions) => {
-  const chunks = divideCaptionsIntoChunks(captions, 15, 30, 35);
-  const ratings = await Promise.all(
-    chunks.map((chunk) => {
-      const textChunk = chunk.map((caption) => caption.text).join(" ");
-      return exports.analyzeCaptions(textChunk);
-    })
-  );
-
-  const chunksWithRatings = chunks.map((chunk, index) => {
-    return {
-      chunk: chunk,
-      rating: ratings[index],
-    };
-  });
-
-  chunksWithRatings.sort((a, b) => b.rating - a.rating);
-  const topShorts = chunksWithRatings.slice(0, 3);
-  const timestamps = topShorts.map(({ chunk }) => ({
-    start: chunk[0].start,
-    end: chunk[chunk.length - 1].start + chunk[chunk.length - 1].duration,
-  }));
-
-  console.log("timestamps:", timestamps);
-  return timestamps;
-};
-
 function divideCaptionsIntoChunks(
   captions,
   minDuration,
   targetDuration,
-  maxDuration
+  maxDuration,
 ) {
   let chunks = [];
   let currentChunk = [];

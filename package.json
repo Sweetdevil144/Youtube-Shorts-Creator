@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node api/app.js",
-    "dev": "nodemon api/app.js"
+    "dev": "nodemon api/app.js",
+    "format": "prettier --check --ignore-path .gitignore .",
+    "format:fix": "prettier --write --ignore-path .gitignore ."
   },
   "keywords": [],
   "author": "",
