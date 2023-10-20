@@ -23,6 +23,7 @@ exports.getVideoCaptions = async (Id) => {
     const captions = response.data;
     return captions;
   } catch (error) {
+    console.log("Error");
     console.error(error.response ? error.response.data : error.message);
   }
 };

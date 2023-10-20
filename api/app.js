@@ -24,14 +24,15 @@ app.post("/process_video", async (req, res) => {
   try {
     console.log("Fetching - 2");
     const transcripts = await youtube.getVideoCaptions(videoId);
-    console.log("Captions recieved. ", transcripts);
-    const shorts = await fetchResults.extractShorts(transcripts);
+    console.log("Captions recieved.");
+    const shorts = await fetchResults.extractShorts(transcripts.transcript);
     console.log("Shorts Extracted");
     console.log(shorts);
     return res.json({ success: true, shorts });
   } catch (error) {
+    console.log("Catched error in app.js");
     console.error("An Error occured -> " + error);
-    return res.json({ success: false, error: error.toString() });
+    // return res.json({ success: false, error: error.toString() });
   }
 });
 

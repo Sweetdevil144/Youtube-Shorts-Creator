@@ -1,7 +1,9 @@
 const axios = require("axios");
 
 exports.extractShorts = async (captions) => {
+  console.log(typeof captions);
   const chunks = divideCaptionsIntoChunks(captions, 15, 30, 35);
+  console.log(`Chunks are ${chunks}`);
   const ratings = await Promise.all(
     chunks.map((chunk) => {
       const textChunk = chunk.map((caption) => caption.text).join(" ");
@@ -15,7 +17,7 @@ exports.extractShorts = async (captions) => {
       rating: ratings[index],
     };
   });
-
+  console.log(`Chunks with ratings in fetchresults.js -> ${chunksWithRatings}`);
   chunksWithRatings.sort((a, b) => b.rating - a.rating);
   const topShorts = chunksWithRatings.slice(0, 3);
   const timestamps = topShorts.map(({ chunk }) => ({
@@ -28,6 +30,8 @@ exports.extractShorts = async (captions) => {
 };
 
 exports.analyzeCaptions = async (text) => {
+  console.log("Text passed in analyzeCaptions is", text);
+  console.log("Analyzing captions in fetchresults.analyzeCaptions");
   const conversation = [
     {
       role: "system",
@@ -57,6 +61,8 @@ exports.analyzeCaptions = async (text) => {
     );
 
     if (response.data.choices && response.data.choices[0]) {
+      console.log(`response.data.choices is ${response.data.choices}`);
+      console.log(`response.data.choices[0] is ${response.data.choices[0]}`);
       const rating = response.data.choices[0].message.content.length;
       return rating;
     } else {
@@ -64,7 +70,8 @@ exports.analyzeCaptions = async (text) => {
       return 0;
     }
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.log("Catched error");
+    console.error("An error occurred in fetchresults.analyzeCaptions:", error);
     return 0;
   }
 };
