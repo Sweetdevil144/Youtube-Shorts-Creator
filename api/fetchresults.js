@@ -50,7 +50,7 @@ const analyzeCaptions = async (text) => {
         "response.data.choices[0].message.content is",
         JSON.parse(response.data.choices[0].message.content)
       );
-      return response.data.choices[0];
+      return JSON.parse(response.data.choices[0].message.content);
     } else {
       console.warn("Unexpected API response:", response.data);
       return 0;
