@@ -8,7 +8,7 @@ exports.extractShorts = async (captions) => {
 
   for (const chunk of chunks) {
     const short = await analyzeCaptions(chunk);
-    shorts.push(short)
+    shorts.push(short);
     console.log(`Shorts after analyzeCaptions are ${shorts}`);
   }
   console.log(`Shorts array in extractShorts is ${shorts}`);
@@ -16,7 +16,7 @@ exports.extractShorts = async (captions) => {
 };
 
 const analyzeCaptions = async (text) => {
-  console.log("Text passed in analyzeCaptions is", text);
+  // console.log("Text passed in analyzeCaptions is", text);
   console.log("Analyzing captions in fetchresults.analyzeCaptions");
   const conversation = [
     {
@@ -47,11 +47,12 @@ const analyzeCaptions = async (text) => {
     );
 
     if (response.data.choices && response.data.choices[0]) {
-      console.log(`response.data.choices is ${response.data.choices}`);
-      console.log(`response.data is ${response.data}`);
-      console.log(`response.data.choices[0] is ${response.data.choices[0]}`);
-      const rating = response.data.choices[0].message.content.length;
-      return rating;
+      console.log("response.data is", JSON.stringify(response.data, null, 2));
+      console.log(
+        "response.data.choices[0].message.content is",
+        JSON.parse(response.data.choices[0].message.content)
+      );
+      return response.data.choices[0];
     } else {
       console.warn("Unexpected API response:", response.data);
       return 0;
