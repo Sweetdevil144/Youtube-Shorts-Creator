@@ -1,35 +1,21 @@
 const axios = require("axios");
 
 exports.extractShorts = async (captions) => {
-  console.log(typeof captions);
-  const chunks = divideCaptionsIntoChunks(captions, 15, 30, 35);
-  console.log(`Chunks are ${chunks}`);
-  const ratings = await Promise.all(
-    chunks.map((chunk) => {
-      const textChunk = chunk.map((caption) => caption.text).join(" ");
-      return exports.analyzeCaptions(textChunk);
-    }),
-  );
+  console.log(`captions length is \n ${captions.length}`);
+  const chunks = divideCaptionsIntoChunks(captions);
 
-  const chunksWithRatings = chunks.map((chunk, index) => {
-    return {
-      chunk: chunk,
-      rating: ratings[index],
-    };
-  });
-  console.log(`Chunks with ratings in fetchresults.js -> ${chunksWithRatings}`);
-  chunksWithRatings.sort((a, b) => b.rating - a.rating);
-  const topShorts = chunksWithRatings.slice(0, 3);
-  const timestamps = topShorts.map(({ chunk }) => ({
-    start: chunk[0].start,
-    end: chunk[chunk.length - 1].start + chunk[chunk.length - 1].duration,
-  }));
+  const shorts = [];
 
-  console.log("timestamps:", timestamps);
-  return timestamps;
+  for (const chunk of chunks) {
+    const short = await analyzeCaptions(chunk);
+    shorts.push(short)
+    console.log(`Shorts after analyzeCaptions are ${shorts}`);
+  }
+  console.log(`Shorts array in extractShorts is ${shorts}`);
+  return shorts;
 };
 
-exports.analyzeCaptions = async (text) => {
+const analyzeCaptions = async (text) => {
   console.log("Text passed in analyzeCaptions is", text);
   console.log("Analyzing captions in fetchresults.analyzeCaptions");
   const conversation = [
@@ -57,11 +43,12 @@ exports.analyzeCaptions = async (text) => {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     if (response.data.choices && response.data.choices[0]) {
       console.log(`response.data.choices is ${response.data.choices}`);
+      console.log(`response.data is ${response.data}`);
       console.log(`response.data.choices[0] is ${response.data.choices[0]}`);
       const rating = response.data.choices[0].message.content.length;
       return rating;
@@ -76,33 +63,22 @@ exports.analyzeCaptions = async (text) => {
   }
 };
 
-function divideCaptionsIntoChunks(
-  captions,
-  minDuration,
-  targetDuration,
-  maxDuration,
-) {
+const divideCaptionsIntoChunks = (captions) => {
   let chunks = [];
-  let currentChunk = [];
-  let currentTime = 0;
+  let currentChunk = "";
+  let tokenCount = 0;
 
   for (let caption of captions) {
-    const nextTime = currentTime + caption.duration;
-    if (
-      (nextTime >= targetDuration && nextTime - currentTime >= minDuration) ||
-      nextTime > maxDuration
-    ) {
-      chunks.push(currentChunk);
-      currentChunk = [caption];
-      currentTime = caption.duration;
+    if (tokenCount < 12000) {
+      currentChunk += caption.snippet;
+      tokenCount += 30;
     } else {
-      currentChunk.push(caption);
-      currentTime += caption.duration;
+      chunks.push(currentChunk);
+      currentChunk = caption.snippet;
+      tokenCount = 30;
     }
   }
-
-  if (currentChunk.length && currentTime >= minDuration) {
-    chunks.push(currentChunk);
-  }
+  console.log(`chunks.length is ${chunks.length}`);
+  chunks.push(currentChunk);
   return chunks;
-}
+};

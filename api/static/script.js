@@ -16,10 +16,11 @@ document.addEventListener("DOMContentLoaded", function () {
           console.log("Shorts are : " + data.shorts);
           embedVideos(data.shorts, youtube.extractVideoId(url)); // Assuming a function to extract videoId is available
         } else {
-          console.log("An Error occurred");
+          console.log("An Error occurred in script.js in fetching shorts");
         }
       })
       .catch((error) => {
+        console.log(`Error recieved in script.js -> \n ${error}`)
         console.error(error);
       });
   });

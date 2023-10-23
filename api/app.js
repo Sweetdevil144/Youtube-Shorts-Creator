@@ -27,12 +27,12 @@ app.post("/process_video", async (req, res) => {
     console.log("Captions recieved.");
     const shorts = await fetchResults.extractShorts(transcripts.transcript);
     console.log("Shorts Extracted");
-    console.log(shorts);
+    console.log(`shorts are ${shorts}`);
     return res.json({ success: true, shorts });
   } catch (error) {
     console.log("Catched error in app.js");
     console.error("An Error occured -> " + error);
-    // return res.json({ success: false, error: error.toString() });
+    return res.json({ success: false, error: error.toString() });
   }
 });
 
