@@ -9,9 +9,7 @@ exports.extractShorts = async (captions) => {
   for (const chunk of chunks) {
     const short = await analyzeCaptions(chunk);
     shorts.push(short);
-    console.log(`Shorts after analyzeCaptions are ${shorts}`);
   }
-  console.log(`Shorts array in extractShorts is ${shorts}`);
   return shorts;
 };
 

@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         if (data.success) {
           console.log("Video Id is : " + url);
-          console.log("Shorts are : " + data.shorts);
+          console.log("Shorts are : " + JSON.parse(data.shorts));
           embedVideos(data.shorts, youtube.extractVideoId(url)); // Assuming a function to extract videoId is available
         } else {
           console.log("An Error occurred in script.js in fetching shorts");
