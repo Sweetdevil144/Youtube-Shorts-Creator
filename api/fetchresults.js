@@ -1,15 +1,15 @@
 const axios = require("axios");
-
+const TOKEN_LIMIT = 60000; 
 exports.extractShorts = async (captions) => {
   console.log(`captions length is \n ${captions.length}`);
   const chunks = divideCaptionsIntoChunks(captions);
-
   const shorts = [];
 
   for (const chunk of chunks) {
-    const short = await analyzeCaptions(chunk);
+    const short = await analyzeCaptions(JSON.stringify(chunk));
     shorts.push(short);
   }
+  console.log(`Shorts extracted is : ${JSON.stringify(shorts)}`);
   return shorts;
 };
 
@@ -20,11 +20,11 @@ const analyzeCaptions = async (text) => {
     {
       role: "system",
       content:
-        "You are an expert in analyzing video transcripts to identify coherent and engaging parts suitable for creating YouTube shorts. Evaluate the provided text chunks based on their clarity, relevance, and ability to stand alone as engaging content without needing external context. Identify the sections that can be turned into stand-alone YouTube shorts while ensuring they are clear, engaging, and not abruptly starting or ending. Make sure to remember all the data that is being passed and give back results based on the total data sent to you. If any error occurs, mention what the error is in short. If rate limit occurs, notify me of that too.",
+        "You are an expert in analyzing video transcripts to identify coherent and engaging parts suitable for creating YouTube shorts. Evaluate the provided text chunks based on their clarity, relevance, and ability to stand alone as engaging content without needing external context. Identify the sections that can be turned into stand-alone YouTube shorts while ensuring they are clear, engaging, and not abruptly starting or ending. Make sure to remember all the data that is being passed and give back results based on the total data sent to you. If any error occurs, mention what the error is in short. If rate limit occurs, notify me of that too. ",
     },
     {
       role: "user",
-      content: `From the given video transcript, identify the chunks that can best be transformed into compelling YouTube shorts. Here's the text: ${text} Now extract shorts in the following JSON format: { [ { 'start_time:': float, 'end_time': float, 'title': string }, ... ] }`,
+      content: `From the given video transcript, identify the chunks that can best be transformed into compelling YouTube shorts. Here's the text: ${text} Now extract shorts in the following JSON format: { [ { 'start_time:': float (in seconds), 'end_time': float (in seconds), 'title': string }, ... ] } The start and end timings if provided are in minutes.you need to return me start and end timings in seconds converted`,
     },
   ];
 
@@ -45,7 +45,7 @@ const analyzeCaptions = async (text) => {
     );
 
     if (response.data.choices && response.data.choices[0]) {
-      console.log("response.data is", JSON.stringify(response.data, null, 2));
+      // console.log("response.data is", response.data);
       console.log(
         "response.data.choices[0].message.content is",
         JSON.parse(response.data.choices[0].message.content)
@@ -64,20 +64,24 @@ const analyzeCaptions = async (text) => {
 
 const divideCaptionsIntoChunks = (captions) => {
   let chunks = [];
-  let currentChunk = "";
-  let tokenCount = 0;
+  let currentChunk = [];
+  let currentCharCount = 0;
 
   for (let caption of captions) {
-    if (tokenCount < 12000) {
-      currentChunk += caption.snippet;
-      tokenCount += 30;
-    } else {
+    let snippetCharCount = caption.snippet.length;
+    if (currentCharCount + snippetCharCount > TOKEN_LIMIT) {
       chunks.push(currentChunk);
-      currentChunk = caption.snippet;
-      tokenCount = 30;
+      currentChunk = [caption];
+      currentCharCount = snippetCharCount;
+    } else {
+      currentChunk.push(caption);
+      currentCharCount += snippetCharCount;
     }
   }
-  console.log(`chunks.length is ${chunks.length}`);
-  chunks.push(currentChunk);
+
+  if (currentChunk.length > 0) {
+    chunks.push(currentChunk);
+  }
+
   return chunks;
 };
