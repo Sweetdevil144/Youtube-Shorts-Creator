@@ -18,16 +18,11 @@ app.get("/", (req, res) => {
 });
 
 app.post("/process_video", async (req, res) => {
-  console.log("Fetching - 1");
   const videoId = req.body.url;
-  console.log(`Video ID in app.js is : ${videoId}`);
   try {
-    console.log("Fetching - 2");
     const transcripts = await youtube.getVideoCaptions(videoId);
-    console.log("Captions recieved.");
     const shorts = await fetchResults.extractShorts(transcripts.transcript);
-    console.log("Shorts Extracted");
-    // console.log(`shorts are \n ${JSON.stringify(shorts)}`);
+    console.log(`shorts are \n ${JSON.stringify(shorts)}`);
     return res.json({ success: true, shorts });
   } catch (error) {
     console.log("Catched error in app.js");

@@ -12,33 +12,31 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          console.log("Video Id is : " + url);
-          console.log("Shorts are : " + JSON.parse(data.shorts));
-          embedVideos(data.shorts, youtube.extractVideoId(url)); // Assuming a function to extract videoId is available
+          console.log("Success");
+          console.log(`data is ${JSON.stringify(data)}`);
+          embedVideos(data.shorts, url);
         } else {
           console.log("An Error occurred in script.js in fetching shorts");
         }
       })
       .catch((error) => {
-        console.log(`Error recieved in script.js -> \n ${error}`)
+        console.log(`Error recieved in script.js -> \n ${error}`);
         console.error(error);
       });
   });
 });
 
 function embedVideos(shorts, videoId) {
-  console.log("Shorts " + shorts);
-  console.log("Going Good");
-  console.log("Extracted Video ID: ", videoId);
+  console.log("Going Good in embedVideos");
   const container = document.querySelector(".videos-container");
   container.innerHTML = "";
-  shorts.forEach((short, index) => {
-    const { start, end } = short;
-    console.log("Start :" + start + " End: " + end);
+  shorts[0].data.forEach((short, index) => {
+    const { start_time, end_time } = short;
+    console.log("Start :" + start_time + " End: " + end_time);
     const embedCode = `<iframe allowFullScreen="allowFullScreen" 
                                         src="https://www.youtube.com/embed/${videoId}?ecver=1&amp;iv_load_policy=3&amp;rel=0&amp;showinfo=0&amp;yt:stretch=16:9&amp;autohide=1&amp;color=red&amp;start=${Math.round(
-                                          start,
-                                        )}&amp;end=${Math.round(end)}&amp" 
+      start_time
+    )}&amp;end=${end_time}&amp" 
                                         width="260" 
                                         height="140" 
                                         allowtransparency="true" 
