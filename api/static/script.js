@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       })
       .catch((error) => {
-        console.log(`Error recieved in script.js -> \n ${error}`)
+        console.log(`Error recieved in script.js -> \n ${error}`);
         console.error(error);
       });
   });

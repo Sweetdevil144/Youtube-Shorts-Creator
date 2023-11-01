@@ -41,14 +41,14 @@ const analyzeCaptions = async (text) => {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (response.data.choices && response.data.choices[0]) {
       console.log("response.data is", JSON.stringify(response.data, null, 2));
       console.log(
         "response.data.choices[0].message.content is",
-        JSON.parse(response.data.choices[0].message.content)
+        JSON.parse(response.data.choices[0].message.content),
       );
       return JSON.parse(response.data.choices[0].message.content);
     } else {
