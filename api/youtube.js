@@ -1,9 +1,7 @@
 const axios = require("axios");
 
 exports.getVideoCaptions = async (Id) => {
-  console.log(`Video ID provided in youtube.js is ${Id}`);
   const API_KEY = process.env.Rapid_API_KEY;
-  console.log(`API-Key is ${API_KEY}`);
 
   const options = {
     method: "POST",
