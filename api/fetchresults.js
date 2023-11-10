@@ -17,11 +17,20 @@ const analyzeCaptions = async (text) => {
     {
       role: "system",
       content:
-        "You are an expert in analyzing video transcripts to identify coherent and engaging parts suitable for creating YouTube shorts. Evaluate the provided text chunks based on their clarity, relevance, and ability to stand alone as engaging content without needing external context. Identify the sections that can be turned into stand-alone YouTube shorts while ensuring they are clear, engaging, and not abruptly starting or ending. Make sure to remember all the data that is being passed and give back results based on the total data sent to you. If any error occurs, mention what the error is in short. If rate limit occurs, notify me of that too. ",
+        "You are an expert in analyzing video transcripts to identify coherent and engaging parts suitable for creating YouTube shorts. Evaluate the provided text chunks based on their clarity, relevance, and ability to stand alone as engaging content without needing external context. Identify the sections that can be turned into stand-alone YouTube shorts while ensuring they are clear, engaging, and not abruptly starting or ending. Make sure to remember all the daathat is being passed and give back results based on the total data sent to you. If any error occurs, mention what the error is. If you are unable to process the given video transcript at the moment, give a deatiled message why is it so ",
     },
     {
       role: "user",
-      content: `From the given video transcript, identify the chunks that can best be transformed into compelling YouTube shorts and extract only 3 high quality shorts from this. Here's the text: ${text} Now extract shorts in the following JSON format: { [ { 'start_time:': float (in seconds), 'end_time': float (in seconds), 'title': string }, ... ] } The start and end timings are provided in minutes.
+      content: `From the given video transcript, identify the chunks that can best be transformed into compelling YouTube shorts and extract only 3 high quality shorts from this. Here's the text: ${text} Now extract shorts strictly in the following JSON format: {
+        "data": [
+          {
+            "start_time": start_time,
+            "end_time": end_time,
+            "title": title (in string)
+          },
+          // rest of objects
+        ]
+      } The start and end timings are provided in minutes.
       However. Using the provided timing, convert that necessarily into seconds when returning output. For example, 2:28 is 2 minutes and 28 seconds, which is 148 seconds so return 148 instead of 2.28. One more necessary condition should be that the extracted short time should lie between 15-20 seconds.
       The difference between start_time and end_time should necessarily lie between 12 to 23 seconds. The content of video lies in provided captions, whereas the corresponding timings lie in the given start_time
       `,
@@ -41,13 +50,13 @@ const analyzeCaptions = async (text) => {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     if (response.data.choices && response.data.choices[0]) {
       console.log(
         "response.data.choices[0].message.content is",
-        JSON.parse(response.data.choices[0].message.content),
+        JSON.parse(response.data.choices[0].message.content)
       );
       return JSON.parse(response.data.choices[0].message.content);
     } else {

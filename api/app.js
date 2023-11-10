@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
+const cors = require("cors"); // Require the CORS package
 
 const fetchResults = require("./fetchresults");
 const youtube = require("./youtube");
@@ -10,6 +11,7 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
+app.use(cors()); // Use the CORS middleware
 
 app.use("/static", express.static(path.join(__dirname, "static")));
 
@@ -22,15 +24,14 @@ app.post("/process_video", async (req, res) => {
   try {
     const transcripts = await youtube.getVideoCaptions(videoId);
     const shorts = await fetchResults.extractShorts(transcripts.transcript);
-    console.log(`shorts are \n ${JSON.stringify(shorts)}`);
     return res.json({ success: true, shorts });
   } catch (error) {
-    console.log("Catched error in app.js");
-    console.error("An Error occured -> " + error);
+    console.log("Caught error in app.js");
+    console.error("An Error occurred -> " + error);
     return res.json({ success: false, error: error.toString() });
   }
 });
 
 app.listen(PORT, () => {
-  console.log("Server is running on port 3000");
+  console.log(`Server is running on port ${PORT}`);
 });

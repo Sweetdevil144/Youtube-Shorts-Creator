@@ -11,10 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(`Type of data is ${typeof data}`);
+        console.log(data);
         if (data.success) {
           console.log("Success");
-          console.log(`data is ${JSON.stringify(data)}`);
-          embedVideos(data.shorts, url);
+          embedVideos(data.shorts[0], url);
         } else {
           console.log("An Error occurred in script.js in fetching shorts");
         }
@@ -26,22 +27,31 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-function embedVideos(shorts, videoId) {
+function embedVideos(data, videoId) {
   console.log("Going Good in embedVideos");
   const container = document.querySelector(".videos-container");
   container.innerHTML = "";
-  shorts[0].data.forEach((short, index) => {
-    const { start_time, end_time } = short;
-    console.log("Start :" + start_time + " End: " + end_time);
+
+  console.log(
+    `Shorts recieved in embedVideos is ${JSON.stringify(
+      data.data
+    )} \n data length is ${data.data.length}`
+  );
+  for (let i = 0; i < data.data.length; i++) {
+    const { start_time, end_time, title } = data.data[i];
+    console.log(
+      "Start: " + start_time + " End: " + end_time + " Title: " + title
+    );
     const embedCode = `<iframe allowFullScreen="allowFullScreen" 
-                                        src="https://www.youtube.com/embed/${videoId}?ecver=1&amp;iv_load_policy=3&amp;rel=0&amp;showinfo=0&amp;yt:stretch=16:9&amp;autohide=1&amp;color=red&amp;start=${Math.round(
+        src="https://www.youtube.com/embed/${videoId}?start=${Math.round(
       start_time
-    )}&amp;end=${end_time}&amp" 
-                                        width="260" 
-                                        height="140" 
-                                        allowtransparency="true" 
-                                        >
-                                </iframe>`;
+    )}&end=${Math.round(end_time)}&autoplay=0&mute=1" 
+        width="260" 
+        height="140" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>`;
     container.innerHTML += embedCode;
-  });
+  }
 }
