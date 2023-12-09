@@ -1,14 +1,15 @@
 const axios = require("axios");
-const TOKEN_LIMIT = 60000;
+const TOKEN_LIMIT = 128000;
 exports.extractShorts = async (captions) => {
   const chunks = divideCaptionsIntoChunks(captions);
-  const shorts = [];
-
+  let allShorts = []; // Array to hold all shorts from all chunks
   for (const chunk of chunks) {
-    const short = await analyzeCaptions(JSON.stringify(chunk));
-    shorts.push(short);
+    const shortsFromChunk = await analyzeCaptions(JSON.stringify(chunk));
+    // Combine the shorts from this chunk into the main array
+    allShorts = allShorts.concat(shortsFromChunk);
   }
-  return shorts;
+  console.log(allShorts);
+  return allShorts;
 };
 
 const analyzeCaptions = async (text) => {
@@ -17,7 +18,7 @@ const analyzeCaptions = async (text) => {
     {
       role: "system",
       content:
-        "You are an expert in analyzing video transcripts to identify coherent and engaging parts suitable for creating YouTube shorts. Evaluate the provided text chunks based on their clarity, relevance, and ability to stand alone as engaging content without needing external context. Identify the sections that can be turned into stand-alone YouTube shorts while ensuring they are clear, engaging, and not abruptly starting or ending. Make sure to remember all the daathat is being passed and give back results based on the total data sent to you. If any error occurs, mention what the error is. If you are unable to process the given video transcript at the moment, give a deatiled message why is it so ",
+        "You are an expert in analyzing video transcripts from end to end to identify coherent and engaging parts suitable for creating YouTube shorts. Evaluate the provided text chunks based on their clarity, relevance, and ability to stand alone as engaging content without needing external context. Identify the sections that can be turned into stand-alone YouTube shorts while ensuring they are clear, engaging, and not abruptly starting or ending. Make sure to remember all the daathat is being passed and give back results based on the total data sent to you. Make sure to not give anything other other message than that specified in user roles.",
     },
     {
       role: "user",
@@ -31,8 +32,8 @@ const analyzeCaptions = async (text) => {
           // rest of objects
         ]
       } The start and end timings are provided in minutes.
-      However. Using the provided timing, convert that necessarily into seconds when returning output. For example, 2:28 is 2 minutes and 28 seconds, which is 148 seconds so return 148 instead of 2.28. One more necessary condition should be that the extracted short time should lie between 15-20 seconds.
-      The difference between start_time and end_time should necessarily lie between 12 to 23 seconds. The content of video lies in provided captions, whereas the corresponding timings lie in the given start_time
+      However. Using the provided timing, convert that necessarily into seconds when returning output. For example, 2:28 is 2 minutes and 28 seconds, which is 148 seconds so return 148 instead of 2.28. The length of a clip extracted should lie in 15 seconds to 25 seconds.
+      The content of video lies in provided captions, whereas the corresponding timings lie in the given start_time. Make sure to analyze complete transcript and give shorts on that data's basis rather than only utilising the beginning of the transcript.
       `,
     },
   ];
@@ -41,7 +42,7 @@ const analyzeCaptions = async (text) => {
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-3.5-turbo-16k",
+        model: "gpt-4-1106-preview",
         messages: conversation,
         temperature: 0.1,
       },
@@ -50,23 +51,31 @@ const analyzeCaptions = async (text) => {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (response.data.choices && response.data.choices[0]) {
-      console.log(
-        "response.data.choices[0].message.content is",
-        JSON.parse(response.data.choices[0].message.content)
-      );
-      return JSON.parse(response.data.choices[0].message.content);
+      // Extracting the JSON string from the response
+      let content = response.data.choices[0].message.content;
+      let jsonMatch = content.match(/```json\n([\s\S]*?)\n```/);
+
+      if (jsonMatch && jsonMatch[1]) {
+        // Parsing the extracted JSON string
+        let parsedJson = JSON.parse(jsonMatch[1]);
+        console.log("Parsed JSON is", parsedJson);
+        return parsedJson;
+      } else {
+        console.warn("No JSON data found in response");
+        return null;
+      }
     } else {
       console.warn("Unexpected API response:", response.data);
-      return 0;
+      return null;
     }
   } catch (error) {
-    console.log("Catched error");
+    console.log("Caught error");
     console.error("An error occurred in fetchresults.analyzeCaptions:", error);
-    return 0;
+    return null;
   }
 };
 

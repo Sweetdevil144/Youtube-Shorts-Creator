@@ -34,20 +34,20 @@ function embedVideos(data, videoId) {
 
   console.log(
     `Shorts recieved in embedVideos is ${JSON.stringify(
-      data.data
-    )} \n data length is ${data.data.length}`
+      data.data,
+    )} \n data length is ${data.data.length}`,
   );
   for (let i = 0; i < data.data.length; i++) {
     const { start_time, end_time, title } = data.data[i];
     console.log(
-      "Start: " + start_time + " End: " + end_time + " Title: " + title
+      "Start: " + start_time + " End: " + end_time + " Title: " + title,
     );
     const embedCode = `<iframe allowFullScreen="allowFullScreen" 
         src="https://www.youtube.com/embed/${videoId}?start=${Math.round(
-      start_time
-    )}&end=${Math.round(end_time)}&autoplay=0&mute=1" 
-        width="260" 
-        height="140" 
+          start_time,
+        )}&end=${Math.round(end_time)}&autoplay=0&mute=1" 
+        width="300" 
+        height="200" 
         frameborder="0" 
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
         allowfullscreen>
