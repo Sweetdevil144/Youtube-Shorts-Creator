@@ -3,6 +3,7 @@ const TOKEN_LIMIT = 128000;
 exports.extractShorts = async (captions) => {
   const chunks = divideCaptionsIntoChunks(captions);
   let allShorts = []; // Array to hold all shorts from all chunks
+  console.log(chunks.length);
   for (const chunk of chunks) {
     const shortsFromChunk = await analyzeCaptions(JSON.stringify(chunk));
     // Combine the shorts from this chunk into the main array
@@ -42,7 +43,8 @@ const analyzeCaptions = async (text) => {
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-4-1106-preview",
+        // model: "gpt-4-1106-preview",
+        model: "gpt-3.5-16k",
         messages: conversation,
         temperature: 0.1,
       },
