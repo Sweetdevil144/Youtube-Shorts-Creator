@@ -1,6 +1,6 @@
 const axios = require("axios");
 const { response } = require("express");
-const TOKEN_LIMIT = 128000;
+const TOKEN_LIMIT = 16000;
 exports.extractShorts = async (captions) => {
   const chunks = divideCaptionsIntoChunks(captions);
   let allShorts = []; // Array to hold all shorts from all chunks
@@ -17,28 +17,24 @@ exports.extractShorts = async (captions) => {
 const analyzeCaptions = async (text) => {
   console.log("Analyzing captions in fetchresults.analyzeCaptions");
   const conversation = [
-    {
-      role: "system",
-      content:
-        "You are an expert in analyzing video transcripts from end to end to identify coherent and engaging parts suitable for creating YouTube shorts. Evaluate the provided text chunks based on their clarity, relevance, and ability to stand alone as engaging content without needing external context. Identify the sections that can be turned into stand-alone YouTube shorts while ensuring they are clear, engaging, and not abruptly starting or ending. Make sure to remember all the data that is being passed and give back results based on the total data sent to you. Make sure to not give anything other other message than that specified in user roles.",
-    },
-    {
-      role: "user",
-      content: `From the given video transcript, identify the chunks that can best be transformed into compelling YouTube shorts and extract only 3 high quality shorts from this. Here's the text: ${text} Now extract shorts strictly in the following JSON format: {
-        "data": [
-          {
-            "start_time": start_time,
-            "end_time": end_time,
-            "title": title (in string)
-          },
-          // rest of objects
-        ]
-      } The start and end timings are provided in minutes.
-      However. Using the provided timing, convert that necessarily into seconds when returning output. For example, 2:28 is 2 minutes and 28 seconds, which is 148 seconds so return 148 instead of 2.28. The length of a clip extracted should lie in 15 seconds to 25 seconds.
-      The content of video lies in provided captions, whereas the corresponding timings lie in the given start_time. Make sure to analyze complete transcript and give shorts on that data's basis rather than only utilising the beginning of the transcript.
-      `,
-    },
-  ];
+  {
+    role: "system",
+    content:
+      "Your task is to analyze video transcripts and identify segments suitable for creating short video clips. Focus on the clarity, relevance, and standalone value of each segment. Each identified segment should be clear, engaging, and have a well-defined start and end, without abrupt transitions.",
+  },
+  {
+    role: "user",
+    content: `Analyze the provided video transcript and identify segments that can be transformed into compelling short video clips. Extract up to 3 high-quality segments. Here's the transcript: ${text}. Please provide the segments in the following JSON format: {
+      "data": [
+        {
+          "start_time": [start in seconds],
+          "end_time": [end in seconds],
+          "title": [title of the segment]
+        }
+      ]
+    } Note: The start and end times should be provided in total seconds (not minutes or mixed formats). Each segment should be between 15 to 25 seconds long. Analyze the entire transcript to identify the best segments.`
+  },
+];
 
   try {
     const response = await axios.post(
@@ -54,7 +50,7 @@ const analyzeCaptions = async (text) => {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     if (response.data.choices && response.data.choices[0]) {
@@ -69,7 +65,7 @@ const analyzeCaptions = async (text) => {
         return parsedJson;
       } else {
         console.warn("No JSON data found in response");
-        console.log(content)
+        console.log(content);
         return JSON.parse(content);
       }
     } else {
@@ -89,7 +85,9 @@ const divideCaptionsIntoChunks = (captions) => {
   let currentCharCount = 0;
 
   for (let caption of captions) {
-    let snippetCharCount = caption.snippet.length;
+    // Check if snippet is null and handle it appropriately
+    let snippetCharCount = caption.snippet ? caption.snippet.length : 0;
+
     if (currentCharCount + snippetCharCount > TOKEN_LIMIT) {
       chunks.push(currentChunk);
       currentChunk = [caption];
