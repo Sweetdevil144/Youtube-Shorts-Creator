@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { response } = require("express");
 const TOKEN_LIMIT = 128000;
 exports.extractShorts = async (captions) => {
   const chunks = divideCaptionsIntoChunks(captions);
@@ -19,7 +20,7 @@ const analyzeCaptions = async (text) => {
     {
       role: "system",
       content:
-        "You are an expert in analyzing video transcripts from end to end to identify coherent and engaging parts suitable for creating YouTube shorts. Evaluate the provided text chunks based on their clarity, relevance, and ability to stand alone as engaging content without needing external context. Identify the sections that can be turned into stand-alone YouTube shorts while ensuring they are clear, engaging, and not abruptly starting or ending. Make sure to remember all the daathat is being passed and give back results based on the total data sent to you. Make sure to not give anything other other message than that specified in user roles.",
+        "You are an expert in analyzing video transcripts from end to end to identify coherent and engaging parts suitable for creating YouTube shorts. Evaluate the provided text chunks based on their clarity, relevance, and ability to stand alone as engaging content without needing external context. Identify the sections that can be turned into stand-alone YouTube shorts while ensuring they are clear, engaging, and not abruptly starting or ending. Make sure to remember all the data that is being passed and give back results based on the total data sent to you. Make sure to not give anything other other message than that specified in user roles.",
     },
     {
       role: "user",
@@ -44,7 +45,7 @@ const analyzeCaptions = async (text) => {
       "https://api.openai.com/v1/chat/completions",
       {
         // model: "gpt-4-1106-preview",
-        model: "gpt-3.5-16k",
+        model: "gpt-3.5-turbo-16k",
         messages: conversation,
         temperature: 0.1,
       },
@@ -68,10 +69,11 @@ const analyzeCaptions = async (text) => {
         return parsedJson;
       } else {
         console.warn("No JSON data found in response");
-        return null;
+        console.log(content)
+        return JSON.parse(content);
       }
     } else {
-      console.warn("Unexpected API response:", response.data);
+      console.warn("Unexpected API response:", content);
       return null;
     }
   } catch (error) {

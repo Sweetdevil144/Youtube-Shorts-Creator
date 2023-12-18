@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(`Type of data is ${typeof data}`);
         console.log(data);
         if (data.success) {
           console.log("Success");
