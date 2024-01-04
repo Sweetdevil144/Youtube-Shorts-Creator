@@ -1,0 +1,14 @@
+name: Continuous Integration
+on: [push, pull_request]
+
+jobs:
+  codecov:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      # Insert steps for running tests here
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
