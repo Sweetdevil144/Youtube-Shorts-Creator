@@ -25,6 +25,7 @@ app.post("/process_video", async (req, res) => {
     const transcripts = await youtube.getVideoCaptions(videoId);
     console.log("transcript fetched");
     const shorts = await fetchResults.extractShorts(transcripts.transcript);
+    console.log('\n\n Shorts are :', shorts);
     return res.json({ success: true, shorts });
   } catch (error) {
     console.log("Caught error in app.js");

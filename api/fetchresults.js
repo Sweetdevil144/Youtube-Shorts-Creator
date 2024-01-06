@@ -1,12 +1,12 @@
 const axios = require("axios");
 const { response } = require("express");
-const TOKEN_LIMIT = 16000;
+const TOKEN_LIMIT = 32000;
 exports.extractShorts = async (captions) => {
   const chunks = divideCaptionsIntoChunks(captions);
   let allShorts = []; // Array to hold all shorts from all chunks
   console.log(chunks.length);
   for (const chunk of chunks) {
-    const shortsFromChunk = await analyzeCaptions(JSON.stringify(chunk));
+    const shortsFromChunk = await analyzeCaptions(chunk);
     // Combine the shorts from this chunk into the main array
     allShorts = allShorts.concat(shortsFromChunk);
   }
@@ -40,8 +40,8 @@ const analyzeCaptions = async (text) => {
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-4-1106-preview",
-        // model: "gpt-3.5-turbo-16k",
+        // model: "gpt-4-1106-preview",
+        model: "gpt-3.5-turbo-16k",
         messages: conversation,
         temperature: 0.1,
       },
@@ -61,7 +61,7 @@ const analyzeCaptions = async (text) => {
       if (jsonMatch && jsonMatch[1]) {
         // Parsing the extracted JSON string
         let parsedJson = JSON.parse(jsonMatch[1]);
-        console.log("Parsed JSON is", parsedJson);
+        console.log("Parsed Content is", content);
         return parsedJson;
       } else {
         console.warn("No JSON data found in response");
@@ -74,7 +74,8 @@ const analyzeCaptions = async (text) => {
     }
   } catch (error) {
     console.log("Caught error");
-    console.error("An error occurred in fetchresults.analyzeCaptions:", error);
+    console.error("An error occurred in fetchresults.analyzeCaptions: \n ", error.response.status);
+    console.error(error.response.data);
     return null;
   }
 };
