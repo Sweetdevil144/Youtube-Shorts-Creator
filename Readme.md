@@ -42,10 +42,10 @@ Your beloved video enters our mystical tool, gets stripped down to its bare capt
 
 1. **Caption Extraction:**
 
-   - The sorcerer, aka `youtube.py`, conjures the video captions, extracting the text along with the respective mystical timestamps.
+   - The sorcerer, aka `youtube.js`, conjures the video captions, extracting the text along with the respective mystical timestamps.
 
 2. **Caption Analysis:**
-   - The alchemist in `fetchresults.py` transforms the captions, utilizing the mighty GPT-4 from OpenAI, recognizing the text chunks prime for transmutation into compelling YouTube shorts.
+   - The alchemist in `fetchresults.js` transforms the captions, utilizing the mighty GPT-4 from OpenAI, recognizing the text chunks prime for transmutation into compelling YouTube shorts.
 3. **Segment Identification:**
    - Upon analysis, clear and tantalizing segments are identified, extracting their timestamps, ready to be forged into dazzling video shorts.
 
