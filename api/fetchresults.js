@@ -40,8 +40,7 @@ const analyzeCaptions = async (text) => {
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        // model: "gpt-4-1106-preview",
-        model: "gpt-3.5-turbo-16k",
+        model: "gpt-4o",
         messages: conversation,
         temperature: 0.1,
       },
