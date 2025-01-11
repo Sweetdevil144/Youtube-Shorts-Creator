@@ -15,6 +15,10 @@ app.use(cors()); // Use the CORS middleware
 
 app.use("/static", express.static(path.join(__dirname, "static")));
 
+app.get("/test", (req, res) => {
+  return res.json({success:true,message:"Hello World !!"})
+})
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "templates", "index.html"));
 });
